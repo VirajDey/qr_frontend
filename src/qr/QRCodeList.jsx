@@ -35,15 +35,21 @@ export function QRCodeList({ qrCodes, type, onDelete }) {
 
     try {
       const token = await getToken();
-      const response = await fetch(`/api/qrcodes/${selectedQR._id}`, {
+      const baseUrl = import.meta.env.VITE_SERVER_URL; // Add this line
+      
+      const response = await fetch(`${baseUrl}/api/qrcodes/${selectedQR._id}`, { // Update the URL
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
+          'Authorization': `Bearer ${token}`,
+          'Accept': 'application/json',
+          'Origin': 'https://qr-frontend-neon.vercel.app'
         },
         body: JSON.stringify({
           links: editLinks
         }),
+        credentials: 'include', // Add this line
+        mode: 'cors' // Add this line
       });
 
       if (!response.ok) {
