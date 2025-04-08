@@ -25,12 +25,12 @@ export default function Dashboard() {
         const token = await getToken();
         const baseUrl = import.meta.env.VITE_SERVER_URL || '';
         
+        // In your fetchUserQRCodes function
         const response = await fetch(`${baseUrl}/api/qrcodes/user`, {
           headers: {
             'Authorization': `Bearer ${token}`,
             'Accept': 'application/json',
             'Content-Type': 'application/json',
-            'Origin': window.location.origin
           },
           credentials: 'include',
           mode: 'cors'
