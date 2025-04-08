@@ -35,7 +35,7 @@ export function QRCodeGenerator({ type, onGenerate }) {
   
     try {
       const shortId = nanoid();
-      const baseUrl = import.meta.env.VITE_SERVER_URL || '';
+      const baseUrl = import.meta.env.VITE_SERVER_URL;
       const finalUrl = `${baseUrl}/qr/${shortId}`;
       const qrDataUrl = await QRCode.toDataURL(finalUrl);
       const token = await getToken();
@@ -58,16 +58,18 @@ export function QRCodeGenerator({ type, onGenerate }) {
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}`,
-          'Accept': 'application/json'
+          'Accept': 'application/json',
+          'Origin': 'https://qr-frontend-neon.vercel.app'
         },
+        body: JSON.stringify(qrData),
         credentials: 'include',
         mode: 'cors'
       });
   
       if (!response.ok) {
-        throw new Error('Failed to save QR code');
+        throw new Error(`Failed to save QR code: ${response.status}`);
       }
-
+  
       const savedQR = await response.json();
       onGenerate(savedQR);
       setName('');
